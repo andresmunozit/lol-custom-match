@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { api, config } = require('../utils/riotApi')
+const { api, config } = require('../utils/riotApi');
 
 class Player {
     constructor(name, region){

@@ -7,53 +7,85 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <h1>LOL Custom Matcher</h1>
-    <form>
-        <div class="form-group">
-            <label for="region">Select a region:</label>
-            <select>
-                <option value="br1">BR</option>
-                <option value="eun1">EUNE</option>
-                <option value="euw1">EUW</option>
-                <option value="la1">LAN</option>
-                <option value="la2">LAS</option>
-                <option value="oce/oc1">OCE</option>
-                <option value="tr1">TR</option>
-                <option value="jp1">JP</option>
-                <option value="kr">KR</option>
-            </select>
+
+    <!-- Input section -->
+    <div class="container">
+        <h1>LOL Custom Matcher</h1>
+        <form>
+            <div class="form-group">
+                <label for="region">Select a region:</label>
+                <select id='region'>
+                    <option value="br1">BR</option>
+                    <option value="eun1">EUNE</option>
+                    <option value="euw1">EUW</option>
+                    <option value="la1">LAN</option>
+                    <option value="la2">LAS</option>
+                    <option value="oce/oc1">OCE</option>
+                    <option value="tr1">TR</option>
+                    <option value="jp1">JP</option>
+                    <option value="kr">KR</option>
+                </select>
+            </div>
+            <p>Enter the summoner names (two or more):</p>
+            <div class="form-group">
+                <input type="text" placeholder="Player 1" id="sum-1">
+            </div>
+            <div class="form-group">
+                <input type="text" placeholder="Player 2" id="sum-2">
+            </div>
+            <div class="form-group">
+                <input type="text" placeholder="Player 3" id="sum-3">
+            </div>
+            <div class="form-group">
+                <input type="text" placeholder="Player 4" id="sum-4">
+            </div>
+            <div class="form-group">
+                <input type="text" placeholder="Player 5" id="sum-5">
+            </div>
+            <div class="form-group">
+                <input type="text" placeholder="Player 6" id="sum-6">
+            </div>
+            <div class="form-group">
+                <input type="text" placeholder="Player 7" id="sum-7">
+            </div>
+            <div class="form-group">
+                <input type="text" placeholder="Player 8" id="sum-8">
+            </div>
+            <div class="form-group">
+                <input type="text" placeholder="Player 9" id="sum-9">
+            </div>
+            <div class="form-group">
+                <input type="text" placeholder="Player 10" id="sum-10">
+            </div>
+            <button>Match</button>
+        </form>
+    </div>
+
+    <!-- The match will render here -->
+    <div class="container">
+        <div class="balanced-match">
+            <div id="team-a">
+                <h3>Team A</h3>
+            </div>
+            <div id="team-b">
+                <h3>Team B</h3>
+            </div>
         </div>
-        <p>Enter the summoner names:</p>
-        <div class="form-group">
-            <input type="text" placeholder="Player 1" id="sum-1">
+    </div>
+
+    <!-- Templates -->
+    <!-- Player template -->
+    <script id="player" type="text/html">
+        <div class="player">
+            <img src="/img/tiers/{{ tier }}.png" alt="{{tier}}">
+            <span>{{name}}</span>
         </div>
-        <div class="form-group">
-            <input type="text" placeholder="Player 2" id="sum-2">
-        </div>
-        <div class="form-group">
-            <input type="text" placeholder="Player 3" id="sum-3">
-        </div>
-        <div class="form-group">
-            <input type="text" placeholder="Player 4" id="sum-4">
-        </div>
-            <input type="text" placeholder="Player 5" id="sum-5">
-        </div>
-        <div class="form-group">
-            <input type="text" placeholder="Player 6" id="sum-6">
-        </div>
-        <div class="form-group">
-            <input type="text" placeholder="Player 7" id="sum-7">
-        </div>
-        <div class="form-group">
-            <input type="text" placeholder="Player 8" id="sum-8">
-        </div>
-        <div class="form-group">
-            <input type="text" placeholder="Player 9" id="sum-9">
-        </div>
-        <div class="form-group">
-            <input type="text" placeholder="Player 10" id="sum-10">
-        </div>
-        <button>Match</button>
-    </form>
+    </script>
+
+    <!-- Dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.4/qs.min.js"></script> 
+    <script src="/js/index.js"></script>
 </body>
 </html>

@@ -1,0 +1,1 @@
+test.todo('Should return an error when one or more summoner names are incorrect');

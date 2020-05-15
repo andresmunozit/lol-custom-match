@@ -1,4 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Jost:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --main-color: #21bf73;
+    --secondary-color: #f9fcfb;
+    --third-color: #fd5e53;
+    --fourth-color: #b0eacd;
+}
 
 * {
     margin: 0;
@@ -15,25 +22,52 @@ body{
     padding: 0 20px;
 }
 
+select{
+    padding: 5px 10px;
+    margin: 4px 0px;
+    border-radius: 4px;
+    border: none;
+    font-family: 'Jost', sans-serif;
+    width: 100%;
+    background-color: var(--secondary-color);
+}
+
+/* input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, */
 input {
     padding: 5px 10px;
     margin: 4px 0px;
     border-radius: 4px;
-    background-color: #f7f7f7;
-    border: solid 1px #d0d0d0;
+    background-color: var(--secondary-color);
+    border: none;
     font-family: 'Jost', sans-serif;
     font-size: .9rem;
     width: 100%;
+    -webkit-text-fill-color: #333;
+    -webkit-box-shadow: 0 0 0px 1000px var(--secondary-color) inset;
 }
 
-select{
-    padding: 3px 10px;
-    margin: 4px 0px;
-    border-radius: 4px;
-    border: solid 1px #d0d0d0;
-    font-family: 'Jost', sans-serif;
-    width: 100%;
+input:disabled, select:disabled {
+    background-color: #D4D4D4;
+    -webkit-text-fill-color: #333;
+    -webkit-box-shadow: 0 0 0px 1000px #D4D4D4 inset;
 }
+
+/* input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  border: 1px solid green;
+  -webkit-text-fill-color: green;
+  -webkit-box-shadow: 0 0 0px 1000px #000 inset;
+  transition: background-color 5000s ease-in-out 0s;
+} */
 
 button {
     padding: 6px 10px;
@@ -42,9 +76,21 @@ button {
     border: none;
     border-radius: 3px;
     font-size: 1rem;
-    background-color: #0779e4;
+    background-color: var(--main-color);
     font-family: 'Jost', sans-serif;
     width: 100%;
+    cursor: pointer;
+    transition: opacity .3s;
+}
+
+button:hover {
+    opacity: .8;
+}
+
+button:disabled {
+    background-color: var(--secondary-color);
+    background-color: #A0A0A0;
+    cursor: unset;
 }
 
 .player {
@@ -54,4 +100,12 @@ button {
 
 .player img {
     height: 40px;
+}
+
+.player span {
+    margin-left: 6px;
+}
+
+.error {
+    color: #fd5e53;
 }

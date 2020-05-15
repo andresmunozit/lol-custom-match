@@ -6,6 +6,7 @@ class Player {
         this.name = name;
         this.region = region;
         this.id = undefined;
+        this.profileIconId = undefined;
         this.mastery = undefined;
         this.leagues = undefined;
     };
@@ -16,8 +17,9 @@ Player.prototype.sync = async function(){
     const name = this.name;
     
     try{
-        const idData = await axios.get(api.sumByName(region, name), config);
-        this.id = idData.data.id;
+        const summonerInfo = await axios.get(api.sumByName(region, name), config);
+        this.id = summonerInfo.data.id;
+        this.profileIconId = summonerInfo.data.profileIconId;
 
         const masteryData = await axios.get(api.masteryById(region, this.id), config);
         this.mastery = masteryData.data;

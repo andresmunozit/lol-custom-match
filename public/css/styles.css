@@ -5,6 +5,9 @@
     --secondary-color: #f9fcfb;
     --third-color: #fd5e53;
     --fourth-color: #b0eacd;
+
+    --blue-riot: #b2ebf2;
+    --red-riot: #ffbcbc;
 }
 
 * {
@@ -96,14 +99,33 @@ button:disabled {
 .player {
     display: flex;
     align-items: center;
+    margin: 5px 0;
+    padding: 8px 10px;
 }
 
-.player img {
-    height: 40px;
+.player .tier {
+    height: 30px;
+    margin-left: 8px;
 }
+
+.profile-icon {
+    height: 30px;
+    border-radius: 50%;
+}
+
+#team-a-players .player{
+    /* border-left: 3px var(--blue-riot) solid; */
+    background-color: var(--blue-riot);
+}
+
+#team-b-players .player{
+    /* border-left: 3px var(--red-riot) solid; */
+    background-color: var(--red-riot);
+}
+
 
 .player span {
-    margin-left: 6px;
+    margin-left: 8px;
 }
 
 .error {

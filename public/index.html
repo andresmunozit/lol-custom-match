@@ -8,6 +8,11 @@
 </head>
 <body>
 
+    <!-- Message section -->
+    <div class="container">
+        <div id="msg"></div>
+    </div>
+
     <!-- Input section -->
     <div class="container">
         <h1>LOL Custom Matcher</h1>
@@ -66,9 +71,11 @@
         <div class="balanced-match">
             <div id="team-a">
                 <h3>Team A</h3>
+                <div id="team-a-players"></div>
             </div>
             <div id="team-b">
                 <h3>Team B</h3>
+                <div id="team-b-players"></ul>
             </div>
         </div>
     </div>
@@ -80,6 +87,11 @@
             <img src="/img/tiers/{{ tier }}.png" alt="{{tier}}">
             <span>{{name}}</span>
         </div>
+    </script>
+
+    <!-- Error template -->
+    <script id="error" type="text/html">
+        <span class="error">{{error}}</span>
     </script>
 
     <!-- Dependencies -->

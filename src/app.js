@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const { getPlayers, balance, balanceByMastery } = require('./utils/balancer');
+const { getPlayers, balance } = require('./utils/balancer');
 
 const app = express();
 
@@ -13,10 +13,9 @@ app.get('/match', async (req, res, next) => {
     const sumNames = req.query.sumNames;
 
     const players = await getPlayers(region, sumNames);
-    const balancedByMastery = balanceByMastery(players);
-    // const match = balance(players);
+    const match = balance(players);
 
-    res.json(balancedByMastery);
+    res.json(match);
 });
 
 const port = process.env.PORT;

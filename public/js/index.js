@@ -54,7 +54,8 @@ const getTier = leagues => {
 const renderPlayer = (container, player) => {
     const name = player.name;
     const tier = getTier(player.leagues);
-    const html = Mustache.render(playerTemplate, { name, tier });
+    const profileIconId = player.profileIconId;
+    const html = Mustache.render(playerTemplate, { name, tier, profileIconId });
     container.insertAdjacentHTML('beforeend', html);
 };
 

@@ -19,44 +19,37 @@ const getPlayers = async (region, sumNames) => {
     return players
 };
 
+const allRanked = players => players.every( player => players.leagues.solo );
+
+const sumPoints = players => {
+    return players.reduce( (acc, player) => {
+        let totalPoints = player.leagues.solo.totalLeaguePoints;
+        if(!allRanked) totalPoints += player.mastery; // If not all players are ranked, mastery points are taking into account
+        return acc + totalPoints;
+    }, 0);
+};
+
 const balance = players => {
-    // Todo
-};
-
-// Return the sum of mastery for an array of players (a team is an array of players)
-const sumMastery = players => {   
-    return players.reduce( (acc, player) => acc + player.mastery, 0)
-};
-
-const balanceByMastery = players => {
     const playersCount = players.length;
     const match = {};
     let possibleTeams;
 
     if(playersCount === 2) return {teamA: [ players[0] ], teamB: [ players[1] ] };
 
-    const totalMastery = sumMastery(players);
-    const mediaMastery = totalMastery / 2;
+    const totalPoints = sumPoints(players);
+    const teamMediaPoints = totalPoints / 2;
 
-    if ( playersCount % 2 === 0 ){ // Even number of players
-        const teamSize = parseInt(playersCount / 2);
-        possibleTeams = Combinatorics.combination( players, teamSize ).toArray();
-    } else { // Odd number of players
-        const smallTeamSize = Math.floor(playersCount / 2);
-        const bigTeamSize = Math.ceil(playersCount / 2);
+    const teamSize = Math.ceil(playersCount / 2);
+    possibleTeams = Combinatorics.combination( players, teamSize ).toArray();
 
-        const possibleSmallTeams = Combinatorics.combination( players, smallTeamSize ).toArray();
-        const possibleBigTeams = Combinatorics.combination( players, bigTeamSize ).toArray();
-
-        possibleTeams = [...possibleSmallTeams, ...possibleBigTeams];
-    };
-
-    // A team is an array of players
     const distancesToMedia = possibleTeams.map( team => {
-        const teamMastery = sumMastery(team);
-        const distanceToMedia = Math.abs(mediaMastery - teamMastery);
+        const teamPoints = sumPoints(team);
+        const distanceToMedia = Math.abs(teamMediaPoints - teamPoints);
+        // console.log( team, {totalPoints}, {teamPoints}, {teamMediaPoints}, {distanceToMedia} )
         return distanceToMedia;
     });
+
+    // console.log(distancesToMedia);
 
     const minDistanceToMedia = Math.min(...distancesToMedia);
     const indexOfBestMatch = distancesToMedia.indexOf(minDistanceToMedia);
@@ -72,7 +65,4 @@ const balanceByMastery = players => {
     return match;
 };
 
-// console.log( team, {totalMastery}, {teamMastery}, {mediaMastery}, {distanceToMedia} )
-
-
-module.exports = { getPlayers, balance, balanceByMastery };
+module.exports = { getPlayers, balance };

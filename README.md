@@ -1,5 +1,5 @@
 # LOL Custom Matcher
-This is a web application to balance League of Legends custom games based on champion mastery and Solo Q ranks.
+This is a web application to balance League of Legends custom games based on champion mastery and Solo Q ranking. I'ts based on ES6/ESNext, Node.js and Express.js.
 
 ## Current Status
 This application is under development.

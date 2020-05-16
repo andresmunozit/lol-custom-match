@@ -36,24 +36,9 @@ const getSumNames = () => {
     },[]);
 };
 
-const getTier = leagues => {
-    let tier; 
-    if(leagues.length !== 0){
-        leagues.forEach( league => {
-            if(league.queueType === 'RANKED_SOLO_5x5'){
-                tier = league.tier;
-            };
-        });
-        if(!tier) return 'UNRANKED';
-        return tier;
-    } else {
-        return 'UNRANKED';
-    };
-};
-
 const renderPlayer = (container, player) => {
     const name = player.name;
-    const tier = getTier(player.leagues);
+    const tier = player.leagues.solo ? player.leagues.solo.tier : 'UNRANKED';
     const profileIconId = player.profileIconId;
     const html = Mustache.render(playerTemplate, { name, tier, profileIconId });
     container.insertAdjacentHTML('beforeend', html);
@@ -72,17 +57,13 @@ const balance = async (region, sumNames) => {
 };
 
 const lockUI = () => {
-    $region.setAttribute('disabled', 'disabled');
     $matchBtn.setAttribute('disabled', 'disabled');
-    const inputsArr = Array.from($inputs);
-    inputsArr.forEach( input => input.setAttribute('disabled', 'disabled'));
+    $matchBtn.textContent  = 'Matching...';
 };
 
 const unLockUI = () => {
-    $region.removeAttribute('disabled');
     $matchBtn.removeAttribute('disabled');
-    const inputsArr = Array.from($inputs);
-    inputsArr.forEach( input => input.removeAttribute('disabled'));
+    $matchBtn.textContent  = 'Match';
 };
 
 const cleanElement =  element => {

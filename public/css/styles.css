@@ -76,23 +76,25 @@ button {
     padding: 6px 10px;
     margin: 4px 0px;
     color: #fff;
-    border: none;
+    border: 1px solid var(--main-color);
     border-radius: 3px;
     font-size: 1rem;
     background-color: var(--main-color);
     font-family: 'Jost', sans-serif;
+    font-weight: 500;
     width: 100%;
     cursor: pointer;
     transition: opacity .3s;
 }
 
-button:hover {
+button:hover:enabled {
     opacity: .8;
 }
 
 button:disabled {
-    background-color: var(--secondary-color);
-    background-color: #A0A0A0;
+    background-color: #fff;
+    border: 1px solid var(--main-color);
+    color: var(--main-color);
     cursor: unset;
 }
 

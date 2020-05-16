@@ -28,6 +28,7 @@ Player.prototype.sync = async function(){
         
     try{
         const summonerInfo = await axios.get(api.sumByName(region, name), config);
+        this.name = summonerInfo.data.name;
         this.id = summonerInfo.data.id;
         this.profileIconId = summonerInfo.data.profileIconId;
 

@@ -19,12 +19,14 @@ const getPlayers = async (region, sumNames) => {
     return players
 };
 
-const allRanked = players => players.every( player => players.leagues.solo );
+const allRanked = players => players.every( player => player.leagues.solo ); // boolean
 
 const sumPoints = players => {
+    const allPlayersAreRanked = allRanked(players);
     return players.reduce( (acc, player) => {
-        let totalPoints = player.leagues.solo.totalLeaguePoints;
-        if(!allRanked) totalPoints += player.mastery; // If not all players are ranked, mastery points are taking into account
+        const leaguePoints = player.leagues.solo ? player.leagues.solo.totalLeaguePoints : 0;
+        const masteryPoints = player.mastery;
+        const totalPoints = allPlayersAreRanked ? leaguePoints : leaguePoints + masteryPoints;
         return acc + totalPoints;
     }, 0);
 };

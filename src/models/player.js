@@ -22,6 +22,24 @@ class Player {
     };
 };
 
+Player.prototype.syncPlayer = async function(){
+    try{
+        const {name, id, profileIconId} = await axios.get(api.sumByName(this.region, this.name), config);
+        this.id = id;
+        this.name = name;
+        this.profileIconId = profileIconId;
+        return this;
+    } catch (error){
+        if (error.response) {
+            if(error.response.status === 404) return {error: `The summoner name ${this.name} couldn't be found`};
+        } else if (error.request) {
+            return {error: error.request};
+        } else {
+            return {error: error.message};
+        };
+    };
+};
+
 Player.prototype.sync = async function(){
     const region = this.region;
     const name = this.name;
@@ -46,8 +64,12 @@ Player.prototype.sync = async function(){
         });
 
         return this;
-    } catch (e){
-        return {error: e.toString()};
+    } catch (error){
+        if(error.response){
+            if (error.response.status === 404) return {error: `The summoner name ${this.name} couldn't be found`};
+        } else {
+            return {error: e.toString()};
+        };
     };
 };
 

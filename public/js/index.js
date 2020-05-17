@@ -90,7 +90,6 @@ $matchBtn.addEventListener('click', async e => {
     const region = $region.value;
     const match = await balance(region, sumNames);
     if(match.error){
-        console.log(match.error);
         renderError({error: match.error});
         return unLockUI();
     };

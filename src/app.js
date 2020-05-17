@@ -13,8 +13,9 @@ app.get('/match', async (req, res, next) => {
     const sumNames = req.query.sumNames;
 
     const players = await getPlayers(region, sumNames);
-    const match = balance(players);
+    if(players.error) return res.status(500).json({error: players.error});
 
+    const match = balance(players);
     res.json(match);
 });
 

@@ -52,8 +52,14 @@ const updateTeamsUI = teams =>{
 const balance = async (region, sumNames) => {
     if(sumNames.length < 2) return {error: 'Please enter two or more summoner names'}
     const query = qs.stringify({ region, sumNames }, { addQueryPrefix: true });
-    const matchData = await axios.get( '/match' + query );
-    return matchData.data;    
+    try{
+        const matchData = await axios.get( '/match' + query );
+        return matchData.data;
+    }catch(error){
+        if(error.response){
+            return {error: error.response.data.error};
+        };
+    };
 };
 
 const lockUI = () => {
@@ -84,6 +90,7 @@ $matchBtn.addEventListener('click', async e => {
     const region = $region.value;
     const match = await balance(region, sumNames);
     if(match.error){
+        console.log(match.error);
         renderError({error: match.error});
         return unLockUI();
     };

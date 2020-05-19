@@ -1,74 +1,95 @@
 const axios = require('axios');
-const { api, config } = require('../utils/riotApi');
+const { api, config, apiErrors } = require('../utils/riotAPI');
 
 class Player {
-    constructor(name, region){
-        this.name = name;
+    constructor(region, name){
         this.region = region;
+        this.name = name;
         this.id = undefined;
         this.profileIconId = undefined;
         this.mastery = undefined;
         this.leagues = undefined;
+        this.createdAt = new Date();
     };
-
+    
     static totalLeaguePoints(tier, rank, leaguePoints){
         const tiers = ['IRON','BRONZE','SILVER','GOLD','PLATINUM','DIAMOND', 'MASTER', 'GRANDMASTER', 'CHALLENGER'];
-        const ranks = ['I','II','III','IV'];
+        const ranks = ['IV','III','II','I'];
         
         const tierPoints = tiers.indexOf(tier) * 400;
         const rankPoints = ranks.indexOf(rank) * 100;
 
         return tierPoints + rankPoints + leaguePoints;
     };
+
+    static find({region, name}){
+        if(!region || !name) return null;
+        const players = Player.all;
+        const player = players.get(`${region+name.trim().toLowerCase()}`);
+        if(!player) return null;
+        return player;    
+    };
 };
 
-Player.prototype.syncPlayer = async function(){
+Player.all = new Map();
+
+Player.prototype.syncSummonerInfo = async function(){
     try{
-        const {name, id, profileIconId} = await axios.get(api.sumByName(this.region, this.name), config);
-        this.id = id;
-        this.name = name;
-        this.profileIconId = profileIconId;
+        const summonerInfo = await axios.get(api.sumByName(this.region, this.name), config);
+        this.name = summonerInfo.data.name;
+        this.id = summonerInfo.data.id;
+        this.profileIconId = summonerInfo.data.profileIconId;
+        if(!Player.all.get(`${this.region+this.name}`)){
+            Player.all.set(`${this.region+this.name.trim().toLowerCase()}`, this);
+        }; 
         return this;
     } catch (error){
-        if (error.response) {
-            if(error.response.status === 404) return {error: `The summoner name ${this.name} couldn't be found`};
-        } else if (error.request) {
-            return {error: error.request};
+        if(error.response){
+            const status = error.response.status;
+            if( status === 404){
+                const errorMsg = apiErrors(404);
+                errorMsg.name = this.name;
+                return errorMsg;
+            }else {
+                return apiErrors(error.response.status);
+            };
         } else {
-            return {error: error.message};
+            return {error: error.toString()};
         };
     };
 };
 
-Player.prototype.sync = async function(){
-    const region = this.region;
-    const name = this.name;
-        
+Player.prototype.syncLeagues = async function(){
     try{
-        const summonerInfo = await axios.get(api.sumByName(region, name), config);
-        this.name = summonerInfo.data.name;
-        this.id = summonerInfo.data.id;
-        this.profileIconId = summonerInfo.data.profileIconId;
-
-        const masteryData = await axios.get(api.masteryById(region, this.id), config);
-        this.mastery = masteryData.data;
-
-        const leaguesData = await axios.get(api.leaguesById(region, this.id), config);
+        const leaguesData = await axios.get(api.leaguesById(this.region, this.id), config);
         this.leagues = {};
-        leaguesData.data.forEach( league => {
+        leaguesData.data.forEach( league => { // Player.all Map contain a reference to this object so is also updated
             const { tier, rank, leaguePoints, queueType } = league;
             if(league.queueType === 'RANKED_SOLO_5x5') {
                 this.leagues.solo = { tier, rank, leaguePoints };
                 this.leagues.solo.totalLeaguePoints = Player.totalLeaguePoints( tier, rank, leaguePoints );
-            } 
+            };
         });
-
         return this;
     } catch (error){
         if(error.response){
-            if (error.response.status === 404) return {error: `The summoner name ${this.name} couldn't be found`};
+            return apiErrors(error.response.status);
         } else {
-            return {error: e.toString()};
+            return {error: error.toString()};
+        };
+    };
+};
+
+Player.prototype.syncMastery = async function(){
+    try{
+        const masteryData = await axios.get(api.masteryById(this.region, this.id), config);
+        this.mastery = masteryData.data;
+        return this;
+    } catch (error){
+        if(error.response){
+            return apiErrors(error.response.status);
+        } else {
+            return {error: error.toString()};
         };
     };
 };

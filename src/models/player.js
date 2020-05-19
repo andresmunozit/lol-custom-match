@@ -47,11 +47,9 @@ Player.prototype.syncSummonerInfo = async function(){
         if(error.response){
             const status = error.response.status;
             if( status === 404){
-                const errorMsg = apiErrors(404);
-                errorMsg.name = this.name;
-                return errorMsg;
-            }else {
-                return apiErrors(error.response.status);
+                return {...apiErrors.get(404), name: this.name};
+            } else {
+                return apiErrors.get(error.response.status);
             };
         } else {
             return {error: error.toString()};
@@ -73,7 +71,7 @@ Player.prototype.syncLeagues = async function(){
         return this;
     } catch (error){
         if(error.response){
-            return apiErrors(error.response.status);
+            return apiErrors.get(error.response.status);
         } else {
             return {error: error.toString()};
         };
@@ -87,7 +85,7 @@ Player.prototype.syncMastery = async function(){
         return this;
     } catch (error){
         if(error.response){
-            return apiErrors(error.response.status);
+            return apiErrors.get(error.response.status);
         } else {
             return {error: error.toString()};
         };

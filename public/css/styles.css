@@ -5,6 +5,7 @@
     --secondary-color: #f9fcfb;
     --third-color: #fd5e53;
     --fourth-color: #b0eacd;
+    --error-color: #fde2e2;
 
     --blue-riot: #b2ebf2;
     --red-riot: #ffbcbc;
@@ -42,20 +43,25 @@ input {
     padding: 5px 10px;
     margin: 4px 0px;
     border-radius: 4px;
-    background-color: var(--secondary-color);
+    background-color: var(--secondary-color) !important;
     border: none;
     font-family: 'Jost', sans-serif;
     font-size: .9rem;
     width: 100%;
-    -webkit-text-fill-color: #333;
-    -webkit-box-shadow: 0 0 0px 1000px var(--secondary-color) inset;
+    color: #333 !important;
+    /* -webkit-text-fill-color: #333;
+    -webkit-box-shadow: 0 0 0px 1000px var(--secondary-color) inset; */
 }
 
-input:disabled, select:disabled {
+input:focus, textarea:focus, select:focus{
+    outline: none;
+}
+
+/* input:disabled, select:disabled {
     background-color: #D4D4D4;
     -webkit-text-fill-color: #333;
     -webkit-box-shadow: 0 0 0px 1000px #D4D4D4 inset;
-}
+} */
 
 /* input:-webkit-autofill,
 input:-webkit-autofill:hover, 
@@ -131,5 +137,10 @@ button:disabled {
 }
 
 .error {
-    color: #fd5e53;
+    color: var(--third-color);
+}
+
+.error-input {
+    border: 1px solid var(--third-color) !important;
+    background-color: var(--error-color) !important;
 }

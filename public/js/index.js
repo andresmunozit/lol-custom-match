@@ -57,7 +57,7 @@ const balance = async (region, summonerNames) => {
         return matchData.data;
     }catch(error){
         if(error.response){
-            return {error: error.response.data.error};
+            return {...error.response.data};
         };
     };
 };
@@ -82,15 +82,29 @@ const renderError = error =>{
     $msg.insertAdjacentHTML('beforeend', html);
 };
 
+const showErrorInputs = names => {
+    const inputs = Array.from($inputs);
+    console.log('INPUTS',inputs);
+    const errorInputs = inputs.filter( input => names.includes(input.value) );
+    errorInputs.forEach( input => input.classList.add('error-input'));
+};
+
+const cleanErrorInputs = () => {
+    $inputs.forEach( input => input.classList.remove('error-input'));    
+};
+
 // Match
 $matchBtn.addEventListener('click', async e => {
     e.preventDefault();
     lockUI();
+    cleanErrorInputs();
     const summonerNames = getsummonerNames();
     const region = $region.value;
     const match = await balance(region, summonerNames);
     if(match.error){
         renderError({error: match.error});
+        console.log(match);
+        if(match.names) showErrorInputs(match.names);
         return unLockUI();
     };
     cleanElement($msg);
@@ -99,6 +113,8 @@ $matchBtn.addEventListener('click', async e => {
     updateTeamsUI(match);
     unLockUI();
 });
+
+
 
 // Save select value on localStorage
 $region.addEventListener('change', e => {

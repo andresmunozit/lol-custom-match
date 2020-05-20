@@ -2,34 +2,17 @@ const Player = require('../models/player')
 const Combinatorics = require('js-combinatorics');
 const { regions } = require('../utils/riotAPI');
 
-// sumName = summoner names
-const getPlayers = async (region, sumNames) => {
-    const players = [];
-
-    // Map doesn't support async/await so "for" loop is used
-    for (let i = 0; i < sumNames.length; i++) {
-        const sumName = sumNames[i];
-        const player = new Player (region, sumName);
-        const riotPlayer = await player.sync();
-        if(riotPlayer.error) return {error: riotPlayer.error};
-        players.push({...riotPlayer});        
-    };
-
-    return players
-};
-
-const allRanked = players => players.every( player => {
+const allRanked = players => players.every( player => { // boolean
     if(player.leagues){
         return player.leagues.solo
     } else {
         return false
     };
-}); // boolean
+}); 
 
 const allMastery = players => players.every( player => player.mastery ); // boolean
 
-const sumPoints = players => {
-    const allPlayersAreRanked = allRanked(players);
+const sumPoints = (players, allPlayersAreRanked) => {
     return players.reduce( (acc, player) => {
         const leaguePoints = player.leagues.solo ? player.leagues.solo.totalLeaguePoints : 0;
         const masteryPoints = player.mastery;
@@ -45,14 +28,15 @@ const balance = players => {
 
     if(playersCount === 2) return {teamA: [ players[0] ], teamB: [ players[1] ] };
 
-    const totalPoints = sumPoints(players);
+    const allPlayersAreRanked = allRanked(players);
+    const totalPoints = sumPoints(players, allPlayersAreRanked);
     const teamMediaPoints = totalPoints / 2;
 
     const teamSize = Math.ceil(playersCount / 2);
     possibleTeams = Combinatorics.combination( players, teamSize ).toArray();
 
     const distancesToMedia = possibleTeams.map( team => {
-        const teamPoints = sumPoints(team);
+        const teamPoints = sumPoints(team, allPlayersAreRanked);
         const distanceToMedia = Math.abs(teamMediaPoints - teamPoints);
         // console.log( team, {totalPoints}, {teamPoints}, {teamMediaPoints}, {distanceToMedia} )
         return distanceToMedia;
@@ -68,10 +52,18 @@ const balance = players => {
     
     const teamB = players.filter( player => !teamAIDs.includes(player.id) );
 
+    // console.log(
+    //     'Min distance to media:',minDistanceToMedia,
+    //     'Points Team A:', sumPoints(teamA, allPlayersAreRanked),
+    //     'Points Team B:', sumPoints(teamB, allPlayersAreRanked),
+    //     'Media:', teamMediaPoints,
+    //     'Total:', totalPoints,
+    // );
+
     match.teamA = teamA;
     match.teamB = teamB;
 
     return match;
 };
 
-module.exports = { getPlayers, balance, allRanked, allMastery };
+module.exports = { balance, allRanked, allMastery };

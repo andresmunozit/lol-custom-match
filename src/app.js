@@ -1,6 +1,9 @@
 const express = require('express');
 const path = require('path');
-const { getPlayers, balance } = require('./utils/balancer');
+const { regions } = require('./utils/riotAPI');
+const { getPlayers } = require('./utils/playersHandler');
+const { balance } = require('./utils/balancer');
+const matchRouter = require('./routers/match');
 
 const app = express();
 
@@ -8,7 +11,9 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static('public'));
 
-app.get('/match', async (req, res, next) => {
+app.use(matchRouter);
+
+app.get('/match_old', async (req, res, next) => {
     const region = req.query.region;
     const sumNames = req.query.sumNames;
 
@@ -19,7 +24,4 @@ app.get('/match', async (req, res, next) => {
     res.json(match);
 });
 
-const port = process.env.PORT;
-app.listen( port, () => {
-    console.log(`Application is running in port ${port}...`);
-});
+module.exports = app;

@@ -7,15 +7,28 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+    
+    <!-- Header section -->
+    <div class="container">
+        <h1>LOL Custom Matcher</h1>
+    </div>
 
     <!-- Message section -->
     <div class="container">
         <div id="msg"></div>
     </div>
 
+    <!-- Friends section -->
+    <!-- <div class="container">
+        <div id="friends">
+            <h2>Friends</h2>
+            <ul></ul>
+        </div>
+    </div> -->
+
     <!-- Input section -->
     <div class="container">
-        <h1>LOL Custom Matcher</h1>
+        <h2>Match Data</h2>
         <form>
             <div class="form-group">
                 <label for="region">Select a region:</label>
@@ -33,34 +46,34 @@
             </div>
             <p>Enter the summoner names (two or more):</p>
             <div class="form-group">
-                <input type="text" placeholder="Player 1" id="sum-1">
+                <input type="text" placeholder="Player 1" autocomplete="off" id="sum-1">
             </div>
             <div class="form-group">
-                <input type="text" placeholder="Player 2" id="sum-2">
+                <input type="text" placeholder="Player 2" autocomplete="off" id="sum-2">
             </div>
             <div class="form-group">
-                <input type="text" placeholder="Player 3" id="sum-3">
+                <input type="text" placeholder="Player 3" autocomplete="off" id="sum-3">
             </div>
             <div class="form-group">
-                <input type="text" placeholder="Player 4" id="sum-4">
+                <input type="text" placeholder="Player 4" autocomplete="off" id="sum-4">
             </div>
             <div class="form-group">
-                <input type="text" placeholder="Player 5" id="sum-5">
+                <input type="text" placeholder="Player 5" autocomplete="off" id="sum-5">
             </div>
             <div class="form-group">
-                <input type="text" placeholder="Player 6" id="sum-6">
+                <input type="text" placeholder="Player 6" autocomplete="off" id="sum-6">
             </div>
             <div class="form-group">
-                <input type="text" placeholder="Player 7" id="sum-7">
+                <input type="text" placeholder="Player 7" autocomplete="off" id="sum-7">
             </div>
             <div class="form-group">
-                <input type="text" placeholder="Player 8" id="sum-8">
+                <input type="text" placeholder="Player 8" autocomplete="off" id="sum-8">
             </div>
             <div class="form-group">
-                <input type="text" placeholder="Player 9" id="sum-9">
+                <input type="text" placeholder="Player 9" autocomplete="off" id="sum-9">
             </div>
             <div class="form-group">
-                <input type="text" placeholder="Player 10" id="sum-10">
+                <input type="text" placeholder="Player 10" autocomplete="off" id="sum-10">
             </div>
             <button>Match</button>
         </form>
@@ -68,6 +81,7 @@
 
     <!-- The match will render here -->
     <div class="container">
+        <h2>Match</h2>
         <div class="balanced-match">
             <div id="team-a">
                 <h3>Team A</h3>
@@ -93,6 +107,13 @@
     <!-- Error template -->
     <script id="error" type="text/html">
         <span class="error">{{error}}</span>
+    </script>
+
+    <!-- Friends template -->
+    <script id="friend" type="text/html">
+        <li>
+            <span class="friend">{{ name }}</span>
+        </li>
     </script>
 
     <!-- Dependencies -->

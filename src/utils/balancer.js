@@ -1,5 +1,6 @@
 const Player = require('../models/player')
 const Combinatorics = require('js-combinatorics');
+const { regions } = require('../utils/riotAPI');
 
 // sumName = summoner names
 const getPlayers = async (region, sumNames) => {
@@ -8,18 +9,24 @@ const getPlayers = async (region, sumNames) => {
     // Map doesn't support async/await so "for" loop is used
     for (let i = 0; i < sumNames.length; i++) {
         const sumName = sumNames[i];
-        const player = new Player (sumName, region);
-
+        const player = new Player (region, sumName);
         const riotPlayer = await player.sync();
         if(riotPlayer.error) return {error: riotPlayer.error};
-
         players.push({...riotPlayer});        
     };
 
     return players
 };
 
-const allRanked = players => players.every( player => player.leagues.solo ); // boolean
+const allRanked = players => players.every( player => {
+    if(player.leagues){
+        return player.leagues.solo
+    } else {
+        return false
+    };
+}); // boolean
+
+const allMastery = players => players.every( player => player.mastery ); // boolean
 
 const sumPoints = players => {
     const allPlayersAreRanked = allRanked(players);
@@ -67,4 +74,4 @@ const balance = players => {
     return match;
 };
 
-module.exports = { getPlayers, balance };
+module.exports = { getPlayers, balance, allRanked, allMastery };

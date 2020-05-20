@@ -10,18 +10,18 @@ router.get('/match', validateMatchRequest, async (req, res, next) => {
     let players;
     try{
         players = await getPlayers(region, summonerNames);
-        if(players.error) return res.status(players.code).send({...players});
+        if(players.error) return res.status(players.code).json({...players});
         if(allRanked(players)) return res.json(balance(players));
 
         players = await getLeagues(players);
-        if(players.error) return res.status(players.code).send({...players});
+        if(players.error) return res.status(players.code).json({...players});
         if(allMastery(players)) return res.json(balance(players));
 
         players = await getMastery(players);
-        if(players.error) return res.status(players.code).send({...players});
+        if(players.error) return res.status(players.code).json({...players});
         return res.json(balance(players));
     } catch (error){
-        return res.status(500).send();
+        return res.status(500).send({error: 'Internal server error'});
     };
 });
 

@@ -27,7 +27,7 @@ const populateUI = () => {
 populateUI();
 
 // App Logic
-const getSumNames = () => {
+const getsummonerNames = () => {
     const inputsArr = Array.from($inputs);
     return inputsArr.reduce( (players, input) => {
         if(!input.value) return players;
@@ -49,9 +49,9 @@ const updateTeamsUI = teams =>{
     teams.teamB.forEach( player => renderPlayer($teamB, player));
 };
 
-const balance = async (region, sumNames) => {
-    if(sumNames.length < 2) return {error: 'Please enter two or more summoner names'}
-    const query = qs.stringify({ region, sumNames }, { addQueryPrefix: true });
+const balance = async (region, summonerNames) => {
+    if(summonerNames.length < 2) return {error: 'Please enter two or more summoner names'}
+    const query = qs.stringify({ region, summonerNames }, { addQueryPrefix: true });
     try{
         const matchData = await axios.get( '/match' + query );
         return matchData.data;
@@ -86,9 +86,9 @@ const renderError = error =>{
 $matchBtn.addEventListener('click', async e => {
     e.preventDefault();
     lockUI();
-    const sumNames = getSumNames();
+    const summonerNames = getsummonerNames();
     const region = $region.value;
-    const match = await balance(region, sumNames);
+    const match = await balance(region, summonerNames);
     if(match.error){
         renderError({error: match.error});
         return unLockUI();

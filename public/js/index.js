@@ -117,7 +117,6 @@ const renderError = error =>{
 
 const showErrorInputs = names => {
     const inputs = Array.from($inputs);
-    console.log('INPUTS',inputs);
     const errorInputs = inputs.filter( input => names.includes(input.value) );
     errorInputs.forEach( input => input.classList.add('error-input'));
 };
@@ -140,9 +139,7 @@ const updateFriendsData = (friends, region) => {
     if(friendsByRegion.length === 0){
         updatedFriendsByRegion = friends;
     } else{
-        console.log('FRIENDS BY REGION', friendsByRegion);
         const newFriends = friends.filter( friend => !friendsByRegion.includes(friend));
-        console.log('NEW FRIENDS', newFriends);
         updatedFriendsByRegion = [...friendsByRegion, ...newFriends];
     };
     friendsData[`${region}`] = updatedFriendsByRegion.sort();
@@ -168,7 +165,6 @@ $matchBtn.addEventListener('click', async e => {
     const match = await balance(region, summonerNames);
     if(match.error){
         renderError({error: match.error});
-        console.log(match);
         if(match.names) showErrorInputs(match.names);
         return unLockUI();
     };

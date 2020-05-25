@@ -8,10 +8,40 @@ const $region = document.getElementById('region');
 const $teamA = document.getElementById('team-a-players');
 const $teamB = document.getElementById('team-b-players');
 const $msg = document.getElementById('msg');
+const $friendsList = document.getElementById('friends-list');
 
 // Templates
 const playerTemplate = document.getElementById('player').innerHTML;
 const errorTemplate = document.getElementById('error').innerHTML;
+const friendTemplate = document.getElementById('friend').innerHTML;
+
+// Friends data
+const createFriendsData = () => {
+    const friendsData = { br1: [], eun1: [], euw1: [], la1: [], la2: [], oceoc1: [],  tr1: [], jp1: [], kr: []};
+    localStorage.setItem('friends', JSON.stringify(friendsData));
+    return friendsData;
+};
+
+const getFriendsData = ( region ) => { // region is optional
+    if(localStorage.getItem('friends')){
+        const friendsData = JSON.parse(localStorage.getItem('friends'));
+        if(!region) return friendsData;
+        return friendsData[`${region}`];
+    } else {
+        const friendsData = createFriendsData();
+        if(!region) return friendsData;
+        return friendsData[`${region}`];
+    };
+};
+
+const renderFriend = friend => {
+    const html = Mustache.render(friendTemplate, { friend });
+    $friendsList.insertAdjacentHTML('beforeend', html);
+};
+
+const updateFriendsUI = friends => {
+    friends.forEach( friend => renderFriend(friend) );
+};
 
 // Populate UI from localStorage
 const populateUI = () => {
@@ -21,7 +51,10 @@ const populateUI = () => {
         $region.selectedIndex = selectedRegionIndex;
     };
         
-    // Summoner Names
+    // Friends
+    const region = $region.value;
+    const friendsByRegion = getFriendsData(region);
+    updateFriendsUI(friendsByRegion);
 };
 
 populateUI();
@@ -93,6 +126,38 @@ const cleanErrorInputs = () => {
     $inputs.forEach( input => input.classList.remove('error-input'));    
 };
 
+/////////////
+const saveFriendsData = friendsData => {
+    localStorage.setItem('friends', JSON.stringify(friendsData));
+};
+
+const updateFriendsData = (friends, region) => {
+    const friendsData = getFriendsData();
+
+    const friendsByRegion = friendsData[`${region}`];
+    let updatedFriendsByRegion;
+
+    if(friendsByRegion.length === 0){
+        updatedFriendsByRegion = friends;
+    } else{
+        console.log('FRIENDS BY REGION', friendsByRegion);
+        const newFriends = friends.filter( friend => !friendsByRegion.includes(friend));
+        console.log('NEW FRIENDS', newFriends);
+        updatedFriendsByRegion = [...friendsByRegion, ...newFriends];
+    };
+    friendsData[`${region}`] = updatedFriendsByRegion.sort();
+
+    saveFriendsData(friendsData);
+};
+
+const friendsFromMatch = match => {
+    if(!match.teamA || !match.teamB) return [];
+    const players = [...match.teamA, ...match.teamB];
+    return players.map(player => player.name);
+};
+
+
+
 // Match
 $matchBtn.addEventListener('click', async e => {
     e.preventDefault();
@@ -107,10 +172,16 @@ $matchBtn.addEventListener('click', async e => {
         if(match.names) showErrorInputs(match.names);
         return unLockUI();
     };
+
     cleanElement($msg);
     cleanElement($teamA);
     cleanElement($teamB);
     updateTeamsUI(match);
+
+    updateFriendsData(friendsFromMatch(match), region);
+    cleanElement($friendsList);
+    updateFriendsUI(getFriendsData(region));
+
     unLockUI();
 });
 
@@ -120,4 +191,9 @@ $matchBtn.addEventListener('click', async e => {
 $region.addEventListener('change', e => {
     const selectedRegionIndex = e.target.selectedIndex;
     localStorage.setItem('selectedRegionIndex', selectedRegionIndex);
+
+    const region = $region.value;
+    const regionFriends = getFriendsData(region);
+    cleanElement($friendsList);
+    updateFriendsUI(regionFriends);
 });

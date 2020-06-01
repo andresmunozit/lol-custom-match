@@ -222,7 +222,7 @@ button:disabled {
     overflow-y:scroll; /*Change in media query*/
 }
 
-.friend, .friend.selected, .friend.selected:hover{
+.friend {
     font-size: .85rem;
     padding-left: 5px;
     font-weight: normal;
@@ -231,13 +231,22 @@ button:disabled {
     margin: 8px 0;
     transition: background .3s ease-in-out;
     cursor: pointer;
+    border: 1px solid transparent;
+
 }
 
-.friend:hover{
+.friend.selected,
+.friend.selected:hover {
     color: #111;
     background: var(--main-color);
     border-radius: 4px;
     font-weight: 600;
+}
+
+.friend:hover {
+    color: #fff;
+    border: 1px solid var(--main-color);
+    border-radius: 4px;
 }
 
 section, aside{

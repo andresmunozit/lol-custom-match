@@ -154,7 +154,6 @@ const friendsFromMatch = match => {
 };
 
 
-
 // Match
 $matchBtn.addEventListener('click', async e => {
     e.preventDefault();
@@ -181,7 +180,37 @@ $matchBtn.addEventListener('click', async e => {
     unLockUI();
 });
 
+const toggleSelected = el => {
+    const classList = Array.from(el.classList);
+    classList.includes('selected') ? el.classList.remove('selected') : el.classList.add('selected');
+    return Array.from(el.classList).includes('selected');
+};
 
+const getFriendsFromInputs = () => {
+    return Array.from($inputs).map( input => input.value);
+};
+
+const isFriendOnIputs = friend => {
+    const inputFriends = getFriendsFromInputs();
+    const inputFriendsLowerCase = inputFriends.map(friend => friend.toLowerCase());
+    return inputFriendsLowerCase.includes(friend.toLowerCase());
+};
+
+const getEmtpyInput = () => {
+    const inputs = Array.from($inputs);
+    return inputs.find( input => input.value === '');
+};
+
+const addFriendToInputs = friend => {
+    const emptyInput = getEmtpyInput();
+    emptyInput.value = friend;
+};
+
+const removeFriendFromInputs = friend => {
+    const inputs = Array.from($inputs);
+    const friendInputs = inputs.filter(input => input.value.toLowerCase() === friend.toLowerCase()) // Inputs where the friend is
+    friendInputs.forEach( input => input.value = '');
+};
 
 // Save select value on localStorage
 $region.addEventListener('change', e => {
@@ -192,4 +221,20 @@ $region.addEventListener('change', e => {
     const regionFriends = getFriendsData(region);
     cleanElement($friendsList);
     updateFriendsUI(regionFriends);
+});
+
+// Select a friend an insert it if it doesnt is in the input list
+$friendsList.addEventListener('click', e => {
+    if(!Array.from(e.target.classList).includes('friend')) return;
+
+    const $friend = e.target; // span element
+    const friend = e.target.innerHTML; // value
+    
+    const selected = toggleSelected($friend); // Toggles selected class and return if is selected
+
+    if(selected){
+        if(!isFriendOnIputs(friend)) addFriendToInputs(friend);
+    } else {
+        if(isFriendOnIputs(friend)) removeFriendFromInputs(friend);
+    };
 });

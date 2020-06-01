@@ -9,6 +9,9 @@ const $teamA = document.getElementById('team-a-players');
 const $teamB = document.getElementById('team-b-players');
 const $msg = document.getElementById('msg');
 const $friendsList = document.getElementById('friends-list');
+const $form = document.querySelector('form');
+
+console.log($form);
 
 // Templates
 const playerTemplate = document.getElementById('player').innerHTML;
@@ -150,35 +153,8 @@ const updateFriendsData = (friends, region) => {
 const friendsFromMatch = match => {
     if(!match.teamA || !match.teamB) return [];
     const players = [...match.teamA, ...match.teamB];
-    return players.map(player => player.name);
+    return players.map(player => player.name.trim());
 };
-
-
-// Match
-$matchBtn.addEventListener('click', async e => {
-    e.preventDefault();
-    lockUI();
-    cleanErrorInputs();
-    const summonerNames = getsummonerNames();
-    const region = $region.value;
-    const match = await balance(region, summonerNames);
-    if(match.error){
-        renderError({error: match.error});
-        if(match.names) showErrorInputs(match.names);
-        return unLockUI();
-    };
-
-    cleanElement($msg);
-    cleanElement($teamA);
-    cleanElement($teamB);
-    updateTeamsUI(match);
-
-    updateFriendsData(friendsFromMatch(match), region);
-    cleanElement($friendsList);
-    updateFriendsUI(getFriendsData(region));
-
-    unLockUI();
-});
 
 const toggleSelected = el => {
     const classList = Array.from(el.classList);
@@ -187,7 +163,7 @@ const toggleSelected = el => {
 };
 
 const getFriendsFromInputs = () => {
-    return Array.from($inputs).map( input => input.value);
+    return Array.from($inputs).filter(input => input.value ).map( input => input.value);
 };
 
 const isFriendOnIputs = friend => {
@@ -212,6 +188,22 @@ const removeFriendFromInputs = friend => {
     friendInputs.forEach( input => input.value = '');
 };
 
+const selectFriendsFromInputs = () => {
+    const inputFriendsLowerCase = getFriendsFromInputs().map( friend => friend.toLowerCase());
+    const $friends = document.querySelectorAll('.friend'); // Need to be called from here because at the start of the script no .friend elements are present
+    const friends = Array.from($friends); // Elements
+    console.log(friends);
+    friends.forEach( friend => {
+        console.log(friend.innerText);
+        const friendInput = friend.innerText.toLowerCase();
+        if (inputFriendsLowerCase.includes(friendInput)){
+            friend.classList.add('selected');
+        } else {
+            friend.classList.remove('selected');
+        };
+    });
+};
+
 // Save select value on localStorage
 $region.addEventListener('change', e => {
     const selectedRegionIndex = e.target.selectedIndex;
@@ -221,6 +213,33 @@ $region.addEventListener('change', e => {
     const regionFriends = getFriendsData(region);
     cleanElement($friendsList);
     updateFriendsUI(regionFriends);
+});
+
+// Match
+$matchBtn.addEventListener('click', async e => {
+    e.preventDefault();
+    lockUI();
+    cleanErrorInputs();
+    const summonerNames = getsummonerNames();
+    const region = $region.value;
+    const match = await balance(region, summonerNames);
+    if(match.error){
+        renderError({error: match.error});
+        if(match.names) showErrorInputs(match.names);
+        return unLockUI();
+    };
+
+    cleanElement($msg);
+    cleanElement($teamA);
+    cleanElement($teamB);
+    updateTeamsUI(match);
+
+    updateFriendsData(friendsFromMatch(match), region);
+    cleanElement($friendsList);
+    updateFriendsUI(getFriendsData(region));
+    selectFriendsFromInputs();
+
+    unLockUI();
 });
 
 // Select a friend an insert it if it doesnt is in the input list
@@ -237,4 +256,9 @@ $friendsList.addEventListener('click', e => {
     } else {
         if(isFriendOnIputs(friend)) removeFriendFromInputs(friend);
     };
+});
+
+// Un select based on input event
+$form.addEventListener('input', (e) => {
+    selectFriendsFromInputs();
 });

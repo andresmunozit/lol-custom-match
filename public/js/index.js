@@ -143,7 +143,9 @@ const updateFriendsData = (friends, region) => {
         const newFriends = friends.filter( friend => !friendsByRegion.includes(friend));
         updatedFriendsByRegion = [...friendsByRegion, ...newFriends];
     };
-    friendsData[`${region}`] = updatedFriendsByRegion.sort();
+    friendsData[`${region}`] = updatedFriendsByRegion.sort( (a, b) => {
+        return a.toLowerCase().localeCompare(b.toLowerCase());
+    });
 
     saveFriendsData(friendsData);
 };

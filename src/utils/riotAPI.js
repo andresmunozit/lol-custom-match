@@ -12,12 +12,14 @@ const regions = new Map([
     ['br1', 'BR'],
     ['eun1', 'EUNE'],
     ['euw1', 'EUW'],
-    ['la1', 'LAN'],
-    ['la2', 'LAS'],
-    ['oce/oc1', 'OCE'],
-    ['tr1', 'TR'],
     ['jp1', 'JP'],
     ['kr', 'KR'],
+    ['la1', 'LAN'],
+    ['la2', 'LAS'],
+    ['na1', 'NA'],
+    ['oc1', 'OCE'],
+    ['ru', 'RU'],
+    ['tr1', 'TR'],
 ]);
 
 const apiErrors = new Map([

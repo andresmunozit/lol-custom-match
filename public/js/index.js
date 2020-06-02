@@ -11,8 +11,6 @@ const $msg = document.getElementById('msg');
 const $friendsList = document.getElementById('friends-list');
 const $form = document.querySelector('form');
 
-console.log($form);
-
 // Templates
 const playerTemplate = document.getElementById('player').innerHTML;
 const errorTemplate = document.getElementById('error').innerHTML;
@@ -20,7 +18,7 @@ const friendTemplate = document.getElementById('friend').innerHTML;
 
 // Friends data
 const createFriendsData = () => {
-    const friendsData = { br1: [], eun1: [], euw1: [], la1: [], la2: [], oceoc1: [],  tr1: [], jp1: [], kr: []};
+    const friendsData = { br1: [], eun1: [], euw1: [], jp1: [], kr: [], la1: [], la2: [], na1: [], oc1: [], ru: [], tr1: [] };
     localStorage.setItem('friends', JSON.stringify(friendsData));
     return friendsData;
 };
@@ -192,9 +190,7 @@ const selectFriendsFromInputs = () => {
     const inputFriendsLowerCase = getFriendsFromInputs().map( friend => friend.toLowerCase());
     const $friends = document.querySelectorAll('.friend'); // Need to be called from here because at the start of the script no .friend elements are present
     const friends = Array.from($friends); // Elements
-    console.log(friends);
     friends.forEach( friend => {
-        console.log(friend.innerText);
         const friendInput = friend.innerText.toLowerCase();
         if (inputFriendsLowerCase.includes(friendInput)){
             friend.classList.add('selected');
